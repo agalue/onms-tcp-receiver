@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net"
 	"os"
@@ -43,12 +44,9 @@ func main() {
 			log.Printf("Error accepting: %v", err)
 			os.Exit(1)
 		}
-		buffer := make([]byte, 8192)
-		if size, err := conn.Read(buffer); err == nil {
-			log.Printf("Received payload of %d bytes from %s", size, conn.RemoteAddr().String())
+		if payload, err := ioutil.ReadAll(conn); err == nil {
+			log.Printf("Received payload of %d bytes from %s", len(payload), conn.RemoteAddr().String())
 			perfdata := new(perf.PerformanceDataReadings)
-			payload := make([]byte, size)
-			copy(payload, buffer[0:size])
 			if err := proto.Unmarshal(payload, perfdata); err == nil {
 				log.Printf("Parsed %d messsages", len(perfdata.Message))
 				for _, msg := range perfdata.Message {
