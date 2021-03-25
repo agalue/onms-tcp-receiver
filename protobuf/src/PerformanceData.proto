@@ -1,0 +1,17 @@
+// Source: https://github.com/OpenNMS/opennms/blob/master/opennms-rrd/opennms-rrd-tcp/src/main/proto/PerformanceData.proto
+
+syntax = "proto2";
+
+option go_package = "./perf";
+
+message PerformanceDataReading {
+  required string path = 1;
+  required string owner = 2;
+  required uint64 timestamp = 3;
+  repeated double dblValue = 4;
+  repeated string strValue = 5;
+}
+
+message PerformanceDataReadings {
+  repeated PerformanceDataReading message = 1;
+}
